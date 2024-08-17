@@ -1,0 +1,42 @@
+{
+  "name": "challange-billing-app",
+  "version": "1.0.0",
+  "description": "This is a small solution for challange to build a Billing app",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node-dev ./src/Server.ts",
+    "dev": "ts-node-dev --inspect=0.0.0.0 ./src/Server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "nodemon": "nodemon -L --inspect=0.0.0.0 ./src/server.ts",
+    "build": "tsc & copyfiles -u 1 src/**/*.json ts-built/"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.3.0",
+    "@types/node-schedule": "^2.1.7",
+    "@types/reflect-metadata": "^0.1.0",
+    "@types/uuid": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "cors": "^2.8.5",
+    "delay": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "handlebars": "^4.7.8",
+    "moment": "^2.30.1",
+    "morgan": "^1.10.0",
+    "node-schedule": "^2.1.1",
+    "nodemailer": "^6.9.14",
+    "reflect-metadata": "^0.2.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^10.0.0"
+  }
+}
