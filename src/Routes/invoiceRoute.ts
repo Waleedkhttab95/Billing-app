@@ -1,4 +1,4 @@
-import { CreateInvoicesAndProccessController, getCustomerInvoicesController } from "../Controllers/InvoiceController";
+import { CreateInvoicesAndProcessController, getCustomerInvoicesController } from "../Controllers/InvoiceController";
 import { createInvoiceService } from "../Services/invoiceService";
 
   export default function(app:any) {
@@ -7,14 +7,14 @@ import { createInvoiceService } from "../Services/invoiceService";
  * @swagger
  * /invoice/generating:
  *   post:
- *     summary: Make invoice proccess
+ *     summary: Make invoice process
  *     responses:
  *       200:
  *         description: created invoice successfully
  *       400:
  *         description: Invalid 
  */
-    app.post("/invoice/generating", CreateInvoicesAndProccessController);
+    app.post("/invoice/generating", CreateInvoicesAndProcessController);
 
     /**
  * @swagger

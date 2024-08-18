@@ -1,25 +1,33 @@
+import axios, { AxiosResponse } from "axios";
 import { ResourceNotFoundError } from "../Errors/ResourceNotFoundError";
 import { Customers } from "../Models/Customer";
 import { CreateInvoiceDto } from "../Models/DTO/invoiceSto/createInvoiceDto";
 import { InvoiceStatus } from "../Models/Invoice";
-import { getcustomersByMultiPlanId, getCustomersWithEndDate } from "../Repositories/customer/customerRepo";
+import {
+  getcustomersByMultiPlanId,
+  getCustomersWithEndDate,
+} from "../Repositories/customer/customerRepo";
 import {
   createInvoice,
   CreateInvoiceType,
   getcustomerInvoices,
 } from "../Repositories/invoice/invoiceRepo";
-import { getSubscriptionPlanById, getSubscriptionPlandByNextBillingDate } from "../Repositories/subscription/subscriptionRepo";
+import {
+  getSubscriptionPlanById,
+  getSubscriptionPlandByNextBillingDate,
+} from "../Repositories/subscription/subscriptionRepo";
 import { sendEmail } from "../utilities/email/sendEmailFunction";
 import { updateNexBillDate } from "./subscriptionService";
 const moment = require("moment");
 
 export const createInvoiceService = async () => {
-  // Get All plans need to generate new bill today 
+  // Get All plans need to generate new bill today
   const plansNeedToBilling = await getSubscriptionPlansNeedToBillToday();
 
   // Get all customers who have these plans
   const customers = await getcustomersByMultiPlanId(plansNeedToBilling);
-  if(!customers) throw new ResourceNotFoundError('No Customers With these Plans');
+  if (!customers)
+    throw new ResourceNotFoundError("No Customers With these Plans");
 
   let arrOfInvoices: CreateInvoiceType[] = [];
 
@@ -129,16 +137,52 @@ export const createUpdatedSubscriptionInvoice = (
   return oldPlanAmount + newPlanAmount;
 };
 
-export const getSubscriptionPlansNeedToBillToday = async() =>{
+export const getSubscriptionPlansNeedToBillToday = async () => {
   const today = new Date();
 
-  // we will get Array of plans , 
+  // we will get Array of plans ,
   const subscribtionPlans = await getSubscriptionPlandByNextBillingDate(today);
 
   return subscribtionPlans;
-}
+};
 
-export const getCustomerInvoices = async (customerId: string) =>{
-  return await getcustomerInvoices(customerId)
-}
+export const getCustomerInvoices = async (customerId: string) => {
+  return await getcustomerInvoices(customerId);
+};
 
+export const createInvoiceFromServerless = async () => {
+  // Get All plans need to generate new bill today
+  const plansNeedToBilling = await getSubscriptionPlansNeedToBillToday();
+
+  // Get all customers who have these plans
+  const customers = await getcustomersByMultiPlanId(plansNeedToBilling);
+  if (!customers)
+    throw new ResourceNotFoundError("No Customers With these Plans");
+
+  let arrOfInvoices: CreateInvoiceType[] = [];
+
+  // now let's create a new invoice for each customer
+
+  customers.forEach(async (customer) => {
+    try {
+      // Make the POST request
+      const response: AxiosResponse<AxiosResponse> =
+        await axios.post<AxiosResponse>(process.env.SERVERLESS_URL!, customer);
+
+      console.log("Response:", response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // If error is an AxiosError, you can get more details
+        console.error("Axios Error:", error.message);
+      } else {
+        console.error("Error:", error);
+      }
+    }
+
+    let newInvoiceCreated = await generateInvoiceService(customer);
+    if (newInvoiceCreated) arrOfInvoices.push(newInvoiceCreated);
+  });
+  await updateNexBillDate(plansNeedToBilling);
+
+  return arrOfInvoices;
+};

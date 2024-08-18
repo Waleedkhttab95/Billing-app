@@ -6,7 +6,7 @@ import { createPaymentController } from "../Controllers/paymentController";
  * @swagger
  * /payment/create:
  *   post:
- *     summary: Make Payment proccess
+ *     summary: Make Payment process
  *     requestBody:
  *       required: true
  *       content:

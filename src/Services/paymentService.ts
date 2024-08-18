@@ -29,7 +29,7 @@ export const createPaymentService = async (
   });
   // Payment process
   try {
-    const paymentResult = await paymentProccess(newPayment);
+    const paymentResult = await paymentProcess(newPayment);
 
     // Update invoice status
     invoice.status = InvoiceStatus.PAID;
@@ -59,11 +59,11 @@ export const createPaymentService = async (
   }
 };
 
-export const paymentProccess = async (payment: CreatePaymentType) => {
+export const paymentProcess = async (payment: CreatePaymentType) => {
   let attemptsCount = 0; // here we can change the attemps of filad payments
 
   while (attemptsCount < 3) {
-    // Here we can write the payment gateway proccess
+    // Here we can write the payment gateway process
     // integration process () =>
     let paymentStatusResult; // Here we can get the status from payment process
 

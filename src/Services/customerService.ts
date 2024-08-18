@@ -84,7 +84,7 @@ export const updateCustomerSubscriptionPlan = async (
     throw new ResourceNotFoundError("subscription plan Not Found");
   const today = new Date();
 
-  // Create new invoice for update plan proccess
+  // Create new invoice for update plan process
   const newInvoice = await createUpdatedSubscriptionInvoice(
     customer.startSubscriptionDate!,
     customerPlan?.price,

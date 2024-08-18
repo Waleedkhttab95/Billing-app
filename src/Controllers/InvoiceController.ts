@@ -4,7 +4,7 @@ import {
 } from "../Services/invoiceService";
 import { Request, Response } from "express";
 
-export const CreateInvoicesAndProccessController = async (
+export const CreateInvoicesAndProcessController = async (
   req: Request,
   res: Response
 ) => {

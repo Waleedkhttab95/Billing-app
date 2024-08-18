@@ -1,6 +1,6 @@
 import app from "./App";
 import * as schedule from "node-schedule";
-import { createInvoiceService } from "./Services/invoiceService";
+import { createInvoiceFromServerless, createInvoiceService } from "./Services/invoiceService";
 
 (async () => {
   const { default: customerRoute } = await import("./Routes/customerRoute");
@@ -13,8 +13,17 @@ import { createInvoiceService } from "./Services/invoiceService";
 
   // CRON Job to check and generate Bills every day Automatically
   schedule.scheduleJob("0 0 * * *", async () => {
-    // Your cron job logic here
+    /**
+     * you can chose one approche 
+     * from local server OR Serverless
+     * Here i use both to show you every case
+     */
+
+    // Cron Job For Creating Invoice From local server
     await createInvoiceService()
+
+    // Cron Job For Creating Invoice From Serverless
+    await createInvoiceFromServerless()
   });
 
   // RUN SERVER :)
